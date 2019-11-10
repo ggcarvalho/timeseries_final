@@ -16,3 +16,11 @@
 *.gz
 *.fdb_latexmk
 *.fls
+*.tex
+*.bib
+
+# Data
+*.csv
+
+# Folders
+__pycache__
