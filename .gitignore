@@ -1,0 +1,18 @@
+#Pictures
+*.png
+*.jpg
+
+#Jupyter Notebook
+*.ipynb_checkpoints
+
+# Compressed
+*.zip
+
+# Latex
+*.aux
+*.log
+*.out
+*.pdf
+*.gz
+*.fdb_latexmk
+*.fls
