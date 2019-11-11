@@ -28,10 +28,16 @@ def get_windows(data,window_size):
         windows.append(data[i: i + window_size])
     return windows
 
+
+def bollinger_windows(data,window):
+    mu,ub,lb = bollinger(data,20)
+    ubw = get_windows(ub,5)
+    lbw = get_windows(lb,5)
+    return ubw,lbw
 """
 To Do list:
 
-- Generate all inputs (table I)
+- Generate all features (table I)
 - MLP
 
 
