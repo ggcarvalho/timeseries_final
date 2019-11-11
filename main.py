@@ -47,14 +47,14 @@ for t in range(start,end):
                     np.array(bb_opn_h[t-window]) , np.array(bb_opn_l[t-window]),np.array(bb_close_h[t-window]) , np.array(bb_close_l[t-window]),opn[t] ))
 
     x_train.append(x)
-    y = np.hstack( (hi[t],lo[t]) )
-    y_train.append(y)
+    #y = np.hstack( (hi[t],lo[t]) )
+    y_train.append([hi[t],lo[t]])
 
 
 ###################################### TEST SET ###############################################################################################################
 x_test = []
 y_test = []
-for t in range(end,end+20):
+for t in range(end,end+30):
 
     x = np.hstack( ( np.array(windows_hi[t-window]), np.array(windows_lo[t-window]), np.array(windows_opn[t-window]),
                     np.array(windows_close[t-window]), exp_lo[t],exp_hi[t], exp_opn[t], exp_close[t],
@@ -62,18 +62,16 @@ for t in range(end,end+20):
                     np.array(bb_opn_h[t-window]) , np.array(bb_opn_l[t-window]),np.array(bb_close_h[t-window]) , np.array(bb_close_l[t-window]),opn[t] ))
 
     x_test.append(x)
-    y = np.hstack( (hi[t],lo[t]) )
-    y_test.append(y)
+
+    y_test.append([hi[t],lo[t]])
 ###############################################################################################################################################################
 
 mlp = MLPRegressor(hidden_layer_sizes=12,
                                  activation='relu', solver='lbfgs',
-                                  max_iter = 10000, learning_rate= 'adaptive')
+                                  max_iter = 10000, learning_rate= 'constant')
 
 mlp.fit(x_train,y_train)
 predict = mlp.predict(x_test)
 
 print("MSE = %s" %MSE(y_test, predict))
-
-
 
