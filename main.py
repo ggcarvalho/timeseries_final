@@ -30,11 +30,11 @@ exp_hi = exp_mov_average(hi,window)
 exp_opn = exp_mov_average(opn,window)
 exp_close = exp_mov_average(close,window)
 
-bb_low_h , bb_low_l = bollinger_windows(lo,5)
-bb_hi_h , bb_hi_l = bollinger_windows(hi,5)
+bb_low_h , bb_low_l = bollinger_windows(lo,window)
+bb_hi_h , bb_hi_l = bollinger_windows(hi,window)
 
-bb_opn_h , bb_opn_l = bollinger_windows(opn,5)
-bb_close_h , bb_close_l = bollinger_windows(close,5)
+bb_opn_h , bb_opn_l = bollinger_windows(opn,window)
+bb_close_h , bb_close_l = bollinger_windows(close,window)
 
 ############################################# TRAINING SET ###################################################################################################
 x_train = []
