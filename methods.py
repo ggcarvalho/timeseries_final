@@ -34,14 +34,4 @@ def bollinger_windows(data,window):
     ubw = get_windows(ub,5)
     lbw = get_windows(lb,5)
     return ubw,lbw
-"""
-To Do list:
 
-- Generate all features (table I)
-- MLP
-
-
-x_train = [....] 33 values from table I
-y_train = max,min of current day (???)
-
-"""

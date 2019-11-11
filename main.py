@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.neural_network import MLPRegressor
+from sklearn.metrics import mean_squared_error as MSE
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pylab import rcParams
@@ -16,7 +18,7 @@ start = petr.index[petr.Date == '2007-05-18'].tolist()[0]
 end = petr.index[petr.Date == '2007-11-23'].tolist()[0]
 window = 5
 
-
+############################################# DEFINING FEATURES ###################################################################################################
 windows_hi = get_windows(hi,window)
 windows_lo = get_windows(lo,window)
 windows_opn = get_windows(opn,window)
@@ -34,7 +36,7 @@ bb_hi_h , bb_hi_l = bollinger_windows(hi,5)
 bb_opn_h , bb_opn_l = bollinger_windows(opn,5)
 bb_close_h , bb_close_l = bollinger_windows(close,5)
 
-
+############################################# TRAINING SET ###################################################################################################
 x_train = []
 y_train = []
 for t in range(start,end):
@@ -45,29 +47,33 @@ for t in range(start,end):
                     np.array(bb_opn_h[t-window]) , np.array(bb_opn_l[t-window]),np.array(bb_close_h[t-window]) , np.array(bb_close_l[t-window]),opn[t] ))
 
     x_train.append(x)
+    y = np.hstack( (hi[t],lo[t]) )
+    y_train.append(y)
 
 
-print(len(x_train))
+###################################### TEST SET ###############################################################################################################
+x_test = []
+y_test = []
+for t in range(end,end+20):
 
-########################### BOLLINGER BANDS ##################################################
-# mu,up,low = bollinger(close,5)
-# plt.figure(1)
-# plt.plot(mu,label="Moving Average")
-# plt.plot(close,label="Close")
-# x_axis = close.index.get_level_values(0)
-# plt.fill_between(x_axis, up, low, color='silver')
-# plt.legend()
-# plt.plot()
-# plt.show()
-# plt.close(1)
-######################## EMA ################################################################
-# exp = exp_mov_average(close,5)
-# plt.figure(2)
-# plt.plot(close,label="close")
-# plt.plot(exp, label="EMA 5")
-# plt.show()
-# plt.close(2)
+    x = np.hstack( ( np.array(windows_hi[t-window]), np.array(windows_lo[t-window]), np.array(windows_opn[t-window]),
+                    np.array(windows_close[t-window]), exp_lo[t],exp_hi[t], exp_opn[t], exp_close[t],
+                    np.array(bb_low_h[t-window]) , np.array(bb_low_l[t-window]),np.array(bb_hi_h[t-window]) , np.array(bb_hi_l[t-window]),
+                    np.array(bb_opn_h[t-window]) , np.array(bb_opn_l[t-window]),np.array(bb_close_h[t-window]) , np.array(bb_close_l[t-window]),opn[t] ))
 
-# close_windows = get_windows(close,5)
-# print(close[close.index==100])
-# print(close_windows[95])
+    x_test.append(x)
+    y = np.hstack( (hi[t],lo[t]) )
+    y_test.append(y)
+###############################################################################################################################################################
+
+mlp = MLPRegressor(hidden_layer_sizes=12,
+                                 activation='relu', solver='lbfgs',
+                                  max_iter = 10000, learning_rate= 'adaptive')
+
+mlp.fit(x_train,y_train)
+predict = mlp.predict(x_test)
+
+print("MSE = %s" %MSE(y_test, predict))
+
+
+
