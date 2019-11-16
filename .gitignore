@@ -19,8 +19,9 @@
 *.tex
 *.bib
 
-# Data
+# Data/Text
 *.csv
+*.txt
 
 # Folders
 __pycache__

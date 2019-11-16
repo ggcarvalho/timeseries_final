@@ -8,7 +8,7 @@ from methods import *
 import seaborn as sns
 rcParams['figure.figsize'] =15, 6
 sns.set()
-
+########################################################################################################################################################
 petr = pd.read_csv("PETR4.csv")
 petr.dropna(inplace=True)
 petr.reset_index(drop=True,inplace=True)
@@ -47,7 +47,6 @@ for t in range(start,end):
                     np.array(bb_opn_h[t-window]) , np.array(bb_opn_l[t-window]),np.array(bb_close_h[t-window]) , np.array(bb_close_l[t-window]),opn[t] ))
 
     x_train.append(x)
-    #y = np.hstack( (hi[t],lo[t]) )
     y_train.append([hi[t],lo[t]])
 
 
@@ -75,3 +74,4 @@ predict = mlp.predict(x_test)
 
 print("MSE = %s" %MSE(y_test, predict))
 
+print(y_test[5],predict[5])
