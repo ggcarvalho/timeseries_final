@@ -5,9 +5,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pylab import rcParams
 from methods import *
+from metrics import mape
 import seaborn as sns
 rcParams['figure.figsize'] =15, 6
 sns.set()
+
 ########################################################################################################################################################
 petr = pd.read_csv("PETR4.csv")
 petr.dropna(inplace=True)
@@ -53,7 +55,7 @@ for t in range(start,end):
 ###################################### TEST SET ###############################################################################################################
 x_test = []
 y_test = []
-for t in range(end,end+30):
+for t in range(end,end+10):
 
     x = np.hstack( ( np.array(windows_hi[t-window]), np.array(windows_lo[t-window]), np.array(windows_opn[t-window]),
                     np.array(windows_close[t-window]), exp_lo[t],exp_hi[t], exp_opn[t], exp_close[t],
@@ -65,13 +67,72 @@ for t in range(end,end+30):
     y_test.append([hi[t],lo[t]])
 ###############################################################################################################################################################
 
+
 mlp = MLPRegressor(hidden_layer_sizes=12,
-                                 activation='relu', solver='lbfgs',
-                                  max_iter = 10000, learning_rate= 'constant')
+                                activation='relu', solver='lbfgs',
+                                max_iter = 10000, learning_rate= 'constant')
 
 mlp.fit(x_train,y_train)
 predict = mlp.predict(x_test)
 
-print("MSE = %s" %MSE(y_test, predict))
+top_test = [y_test[i][0] for i in range(len(y_test))]
+bottom_test = [y_test[i][1] for i in range(len(y_test))]
 
-print(y_test[5],predict[5])
+top_pred = [predict[i][0] for i in range(len(predict))]
+bottom_pred = [predict[i][1] for i in range(len(predict))]
+
+
+# print("MSE = %s" %MSE(y_test, predict))
+# print("MAPE = %s" %mape(top_test, top_pred))
+mse_high = MSE(top_test,top_pred)
+mape_high = mape(top_test,top_pred)
+
+mse_low = MSE(bottom_test,bottom_pred)
+mape_low = mape(bottom_test,bottom_pred)
+
+############################################ FIGURE ##############################################################################
+# plt.figure(1)
+# plt.plot(top_test,label="Test",color='darkblue')
+# plt.plot(top_pred,label='Prediction',color='coral')
+# plt.legend()
+# plt.title("High")
+# plt.ylabel('Price')
+# plt.xlabel('Days')
+# plt.text(2, 40,'MSE = %f \nMAPE = %f'%(mse_high,mape_high))
+# plt.show()
+# plt.close(1)
+
+# plt.figure(2)
+# plt.plot(bottom_test,label="Test",color='darkblue')
+# plt.plot(bottom_pred,label='Prediction',color='coral')
+# plt.legend()
+# plt.title("Low")
+# plt.ylabel('Price')
+# plt.xlabel('Days')
+# plt.text(2, 39 ,'MSE = %f \nMAPE = %f'%(mse_low,mape_low))
+# plt.show()
+# plt.close(2)
+
+plt.figure(1)
+plt.plot(top_test,label="High -- Test",color='green',linewidth = 2)
+plt.plot(top_pred,label='High -- Prediction',linewidth = 1)
+plt.plot(bottom_test,label="Low -- Test",color='red',linewidth = 2)
+plt.plot(bottom_pred,label='Low -- Prediction',linewidth=1)
+plt.legend()
+plt.title("PETR4 High and Low\nPrice predictions")
+plt.ylabel('Price')
+plt.xlabel('Days')
+plt.text(2, 40,'MSE (High) = %f \nMAPE (High) = %f'%(mse_high,mape_high))
+plt.text(4, 40 ,'MSE (Low) = %f \nMAPE (Low) = %f'%(mse_low,mape_low))
+plt.show()
+plt.close(1)
+
+
+"""
+To do:
+- MLP for high prediction + MLP for low prediction
+- plot y_test and prediction
+- find the confidence interval for the predicted values
+- test using the mean of Bollinger bands
+- If possible, implement the trading strategy
+"""
