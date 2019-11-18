@@ -3,6 +3,16 @@ import numpy as np
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error as MSE
 
+import scipy.stats
+
+
+def mean_confidence_interval(data, confidence=0.95):
+    a = 1.0 * np.array(data)
+    n = len(a)
+    m, se = np.mean(a), scipy.stats.sem(a)
+    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+    return m, m-h, m+h
+
 def gen_all_data(df):
     High = df["High"]
     Low = df["Low"]
@@ -40,12 +50,10 @@ def bollinger_windows(data,window):
 def mult_mlp(x_train,x_test,y_train,y_test,iter):
     highs = []
     lows = []
-    mses = []
-    mapes = []
     for i in range(iter):
         mlp = MLPRegressor(hidden_layer_sizes=12,
                                         activation='relu', solver='lbfgs',
-                                        max_iter = 10000, learning_rate= 'constant')
+                                        max_iter = 100, learning_rate= 'constant')
 
         mlp.fit(x_train,y_train)
         predict = mlp.predict(x_test)
@@ -57,6 +65,4 @@ def mult_mlp(x_train,x_test,y_train,y_test,iter):
         bottom_pred = [predict[i][1] for i in range(len(predict))]
         highs.append(top_pred[0])
         lows.append(bottom_pred[0])
-        mses.append(MSE(y_test, predict))
-        mapes.append(mape(top_test, top_pred))
-        return highs, lows, mses, mapes
+        return highs, lows
