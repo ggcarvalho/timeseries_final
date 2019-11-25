@@ -116,7 +116,7 @@ mape_low = mape(bottom_test,bottom_pred)
 
 highs = []
 lows = []
-for i in range(1000):
+for i in range(10000):
     mlp = MLPRegressor(hidden_layer_sizes=12,
                                     activation='relu', solver='lbfgs',
                                     max_iter = 200, learning_rate= 'constant')
