@@ -20,6 +20,17 @@ start = petr.index[petr.Date == '2007-05-18'].tolist()[0]
 end = petr.index[petr.Date == '2007-11-23'].tolist()[0]
 window = 5
 
+mu, ub,lb = bollinger(close,5)
+
+plt.figure(0)
+x_axis = close.index.get_level_values(0)
+plt.plot(close,label="close",linewidth=1)
+plt.fill_between(x_axis, ub,lb, color='silver')
+plt.title("Closing price with\n5 days Bollinger bands")
+plt.legend()
+plt.show()
+plt.close(0)
+
 ############################################# DEFINING FEATURES ###################################################################################################
 windows_hi = get_windows(hi,window)
 windows_lo = get_windows(lo,window)
@@ -89,26 +100,26 @@ mape_low = mape(bottom_test,bottom_pred)
 
 ############################################ FIGURE ##############################################################################
 
-plt.figure(1)
-plt.plot(top_test,label="High -- Test",color='green',linewidth = 2)
-plt.plot(top_pred,label='High -- Prediction',linewidth = 1)
-plt.plot(bottom_test,label="Low -- Test",color='red',linewidth = 2)
-plt.plot(bottom_pred,label='Low -- Prediction',linewidth=1)
-plt.legend()
-plt.title("PETR4 High and Low\nPrice predictions")
-plt.ylabel('Price')
-plt.xlabel('Days')
-plt.text(2, 40,'MSE (High) = %f \nMAPE (High) = %f'%(mse_high,mape_high))
-plt.text(4, 40 ,'MSE (Low) = %f \nMAPE (Low) = %f'%(mse_low,mape_low))
-plt.show()
-plt.close(1)
+# plt.figure(1)
+# plt.plot(top_test,label="High -- Test",color='green',linewidth = 2)
+# plt.plot(top_pred,label='High -- Prediction',linewidth = 1)
+# plt.plot(bottom_test,label="Low -- Test",color='red',linewidth = 2)
+# plt.plot(bottom_pred,label='Low -- Prediction',linewidth=1)
+# plt.legend()
+# plt.title("PETR4 High and Low\nPrice predictions")
+# plt.ylabel('Price')
+# plt.xlabel('Days')
+# plt.text(2, 40,'MSE (High) = %f \nMAPE (High) = %f'%(mse_high,mape_high))
+# plt.text(4, 40 ,'MSE (Low) = %f \nMAPE (Low) = %f'%(mse_low,mape_low))
+# plt.show()
+# plt.close(1)
 
 highs = []
 lows = []
-for i in range(10000):
+for i in range(1000):
     mlp = MLPRegressor(hidden_layer_sizes=12,
                                     activation='relu', solver='lbfgs',
-                                    max_iter = 10000, learning_rate= 'constant')
+                                    max_iter = 200, learning_rate= 'constant')
 
     mlp.fit(x_train,y_train)
     predict = mlp.predict(x_test)
@@ -122,15 +133,23 @@ for i in range(10000):
     lows.append(bottom_pred[0])
 
 plt.figure(2)
-plt.hist(highs,bins=200)
+sns.boxplot(highs)
+plt.axvline(x=hi[end],label='Real value = %f' %hi[end])
+#plt.hist(highs,bins=200)
+plt.title("Highs")
+plt.legend()
 plt.show()
 plt.close(2)
-print(np.mean(highs))
-print(np.std(highs))
+print("Mean (Highs) = %f" %np.mean(highs))
+print("Std. (Highs) = %f" %np.std(highs))
 
 plt.figure(3)
-plt.hist(lows,bins=200)
+sns.boxplot(lows)
+plt.axvline(x=lo[end],label='Real value = %f' %lo[end])
+#plt.hist(lows,bins=200)
+plt.title("Lows")
+plt.legend()
 plt.show()
 plt.close(3)
-print(np.mean(lows))
-print(np.std(lows))
+print("Mean (Lows) = %f" %np.mean(lows))
+print("Std. (Lows) = %f" %np.std(lows))
