@@ -79,24 +79,24 @@ for t in range(end,end+1):
 ###############################################################################################################################################################
 
 
-mlp = MLPRegressor(hidden_layer_sizes=12,
-                                activation='relu', solver='lbfgs',
-                                max_iter = 10000, learning_rate= 'constant')
+# mlp = MLPRegressor(hidden_layer_sizes=12,
+#                                 activation='relu', solver='lbfgs',
+#                                 max_iter = 10000, learning_rate= 'constant')
 
-mlp.fit(x_train,y_train)
-predict = mlp.predict(x_test)
+# mlp.fit(x_train,y_train)
+# predict = mlp.predict(x_test)
 
-top_test = [y_test[i][0] for i in range(len(y_test))]
-bottom_test = [y_test[i][1] for i in range(len(y_test))]
+# top_test = [y_test[i][0] for i in range(len(y_test))]
+# bottom_test = [y_test[i][1] for i in range(len(y_test))]
 
-top_pred = [predict[i][0] for i in range(len(predict))]
-bottom_pred = [predict[i][1] for i in range(len(predict))]
+# top_pred = [predict[i][0] for i in range(len(predict))]
+# bottom_pred = [predict[i][1] for i in range(len(predict))]
 
-mse_high = MSE(top_test,top_pred)
-mape_high = mape(top_test,top_pred)
+# mse_high = MSE(top_test,top_pred)
+# mape_high = mape(top_test,top_pred)
 
-mse_low = MSE(bottom_test,bottom_pred)
-mape_low = mape(bottom_test,bottom_pred)
+# mse_low = MSE(bottom_test,bottom_pred)
+# mape_low = mape(bottom_test,bottom_pred)
 
 ############################################ FIGURE ##############################################################################
 
@@ -119,7 +119,7 @@ lows = []
 for i in range(10000):
     mlp = MLPRegressor(hidden_layer_sizes=12,
                                     activation='relu', solver='lbfgs',
-                                    max_iter = 200, learning_rate= 'constant')
+                                    max_iter = 10000, learning_rate= 'constant')
 
     mlp.fit(x_train,y_train)
     predict = mlp.predict(x_test)
@@ -134,7 +134,7 @@ for i in range(10000):
 
 plt.figure(2)
 sns.boxplot(highs)
-plt.axvline(x=hi[end],label='Real value = %f' %hi[end])
+plt.axvline(x=hi[end],label='Real value = %f' %hi[end],color='red',linestyle="dashed")
 #plt.hist(highs,bins=200)
 plt.title("Highs")
 plt.legend()
@@ -145,7 +145,7 @@ print("Std. (Highs) = %f" %np.std(highs))
 
 plt.figure(3)
 sns.boxplot(lows)
-plt.axvline(x=lo[end],label='Real value = %f' %lo[end])
+plt.axvline(x=lo[end],label='Real value = %f' %lo[end],color='red',linestyle="dashed")
 #plt.hist(lows,bins=200)
 plt.title("Lows")
 plt.legend()
