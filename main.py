@@ -66,7 +66,7 @@ for t in range(start,end):
 ###################################### TEST SET ###############################################################################################################
 x_test = []
 y_test = []
-for t in range(end,end+1):
+for t in range(end,end+10):
 
     x = np.hstack( ( np.array(windows_hi[t-window]), np.array(windows_lo[t-window]), np.array(windows_opn[t-window]),
                     np.array(windows_close[t-window]), exp_lo[t],exp_hi[t], exp_opn[t], exp_close[t],
@@ -78,7 +78,7 @@ for t in range(end,end+1):
     y_test.append([hi[t],lo[t]])
 ###############################################################################################################################################################
 
-
+print(y_test)
 # mlp = MLPRegressor(hidden_layer_sizes=12,
 #                                 activation='relu', solver='lbfgs',
 #                                 max_iter = 10000, learning_rate= 'constant')
@@ -98,7 +98,7 @@ for t in range(end,end+1):
 # mse_low = MSE(bottom_test,bottom_pred)
 # mape_low = mape(bottom_test,bottom_pred)
 
-############################################ FIGURE ##############################################################################
+# ########################################### FIGURE ##############################################################################
 
 # plt.figure(1)
 # plt.plot(top_test,label="High -- Test",color='green',linewidth = 2)
@@ -114,42 +114,43 @@ for t in range(end,end+1):
 # plt.show()
 # plt.close(1)
 
-highs = []
-lows = []
-for i in range(10000):
-    mlp = MLPRegressor(hidden_layer_sizes=12,
-                                    activation='relu', solver='lbfgs',
-                                    max_iter = 10000, learning_rate= 'constant')
+# print(top_test)
+# # highs = []
+# # lows = []
+# # for i in range(10000):
+# #     mlp = MLPRegressor(hidden_layer_sizes=12,
+# #                                     activation='relu', solver='lbfgs',
+# #                                     max_iter = 10000, learning_rate= 'constant')
 
-    mlp.fit(x_train,y_train)
-    predict = mlp.predict(x_test)
+# #     mlp.fit(x_train,y_train)
+# #     predict = mlp.predict(x_test)
 
-    top_test = [y_test[i][0] for i in range(len(y_test))]
-    bottom_test = [y_test[i][1] for i in range(len(y_test))]
+# #     top_test = [y_test[i][0] for i in range(len(y_test))]
+# #     bottom_test = [y_test[i][1] for i in range(len(y_test))]
 
-    top_pred = [predict[i][0] for i in range(len(predict))]
-    bottom_pred = [predict[i][1] for i in range(len(predict))]
-    highs.append(top_pred[0])
-    lows.append(bottom_pred[0])
+# #     top_pred = [predict[i][0] for i in range(len(predict))]
+# #     bottom_pred = [predict[i][1] for i in range(len(predict))]
+# #     highs.append(top_pred[0])
+# #     lows.append(bottom_pred[0])
 
-plt.figure(2)
-sns.boxplot(highs)
-plt.axvline(x=hi[end],label='Real value = %f' %hi[end],color='red',linestyle="dashed")
-#plt.hist(highs,bins=200)
-plt.title("Highs")
-plt.legend()
-plt.show()
-plt.close(2)
-print("Mean (Highs) = %f" %np.mean(highs))
-print("Std. (Highs) = %f" %np.std(highs))
+# # plt.figure(2)
+# # sns.boxplot(highs)
+# # plt.axvline(x=hi[end],label='Real value = %f' %hi[end],color='red',linestyle="dashed")
+# # #plt.hist(highs,bins=200)
+# # plt.title("Highs")
+# # plt.legend()
+# # plt.show()
+# # plt.close(2)
+# # print("Mean (Highs) = %f" %np.mean(highs))
+# # print("Std. (Highs) = %f" %np.std(highs))
 
-plt.figure(3)
-sns.boxplot(lows)
-plt.axvline(x=lo[end],label='Real value = %f' %lo[end],color='red',linestyle="dashed")
-#plt.hist(lows,bins=200)
-plt.title("Lows")
-plt.legend()
-plt.show()
-plt.close(3)
-print("Mean (Lows) = %f" %np.mean(lows))
-print("Std. (Lows) = %f" %np.std(lows))
+# # plt.figure(3)
+# # sns.boxplot(lows)
+# # plt.axvline(x=lo[end],label='Real value = %f' %lo[end],color='red',linestyle="dashed")
+# # #plt.hist(lows,bins=200)
+# # plt.title("Lows")
+# # plt.legend()
+# # plt.show()
+# # plt.close(3)
+# # print("Mean (Lows) = %f" %np.mean(lows))
+# # print("Std. (Lows) = %f" %np.std(lows))
