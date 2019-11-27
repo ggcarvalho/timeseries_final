@@ -6,6 +6,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error as MSE
 import statsmodels.api as sm
 import pandas as pd
+from metrics import mape
 import seaborn as sns
 sns.set()
 #####################################################################################################
@@ -172,17 +173,30 @@ predict_test = modelo.predict(x_test[:, -lag_sel:])
 previsoes_train = np.hstack(( predict_train, predict_val))
 target_train = np.hstack((y_train, y_val))
 
+
+
+mse = MSE(y_test, predict_test)
+
+
+print("MSE treinamento = %s" %MSE(previsoes_train,target_train))
+print("MSE Teste = %s" %MSE(y_test, predict_test))
+
+
+
+
+plt.figure()
 plt.plot(previsoes_train, label = 'Forecast: Train + Validation')
 plt.plot(target_train, label='Train + Validation')
 plt.legend(loc='best')
 plt.show()
+plt.close()
 
+plt.figure()
 plt.plot(predict_test, label = 'Forecast Test')
 plt.plot(y_test, label='Test')
+plt.text(4, 40,'MSE (High) = %f'%mse)
 plt.legend(loc='best')
 plt.show()
+plt.close()
 
-print("MSE treinamento = %s" %MSE(previsoes_train,target_train))
-print("MSE Teste = %s" %MSE(y_test, predict_test))
 print(modelo)
-print(len(predict_test))
