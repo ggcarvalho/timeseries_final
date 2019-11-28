@@ -16,7 +16,7 @@ petr.dropna(inplace=True)
 petr.reset_index(drop=True,inplace=True)
 start = petr.index[petr.Date == '2007-05-18'].tolist()[0]
 end = petr.index[petr.Date == '2007-11-23'].tolist()[0]
-serie = petr["High"][start:end+12]
+serie = petr["Low"][start:end+12]
 # plt.plot(serie)
 # plt.show()
 
@@ -194,7 +194,7 @@ plt.close()
 plt.figure()
 plt.plot(predict_test, label = 'Forecast Test')
 plt.plot(y_test, label='Test')
-plt.text(4, 40,'MSE (High) = %f'%mse)
+plt.text(4, 38.5,'MSE (Low) = %f'%mse) #40 for high
 plt.legend(loc='best')
 plt.show()
 plt.close()
